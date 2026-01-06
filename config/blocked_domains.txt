@@ -1,0 +1,96 @@
+# PROXY SERVER - BLOCKED DOMAINS CONFIGURATION
+
+# Format:
+#   - One domain or IP per line
+#   - Lines starting with # are comments
+#   - Use *.domain.com for suffix matching (blocks all subdomains)
+#   - Hostnames are canonicalized (lowercase, trimmed)
+
+
+
+# ADVERTISING & AD NETWORKS
+*.doubleclick.net
+*.googlesyndication.com
+*.googleadservices.com
+*.googletagmanager.com
+*.google-analytics.com
+*.adsrvr.org
+*.adnxs.com
+*.advertising.com
+ads.yahoo.com
+*.moatads.com
+
+
+# TRACKING & ANALYTICS
+*.facebook.com/tr
+*.scorecardresearch.com
+*.quantserve.com
+*.mixpanel.com
+*.hotjar.com
+*.newrelic.com
+*.nr-data.net
+*.segment.io
+
+
+
+# KNOWN MALWARE & PHISHING DOMAINS
+malware-test.example.com
+phishing-site.example.org
+*.malwaredomainlist.com
+*.malware.com
+*.ransomware-test.net
+evil-downloads.com
+fake-antivirus.net
+crypto-miner-script.com
+
+
+
+# GAMBLING & BETTING
+*.bet365.com
+*.pokerstars.com
+*.888casino.com
+*.williamhill.com
+*.betfair.com
+*.draftkings.com
+*.fanduel.com
+*.bovada.lv
+*.bwin.com
+*.paddypower.com
+
+
+# BLOCKED IP ADDRESSES
+# Malicious IPs (examples from blocklists)
+192.0.2.5
+198.51.100.1
+203.0.113.50
+10.255.255.1
+
+
+# Known malware C&C servers (examples)
+23.227.38.64
+104.131.0.69
+
+
+# SUSPICIOUS TLDs - Commonly abused domains
+*.tk
+*.ml
+*.ga
+*.cf
+*.gq
+
+
+# CRYPTOCURRENCY MINING SCRIPTS
+*.coinhive.com
+*.coin-hive.com
+*.cryptoloot.pro
+*.cryptonight.wasm
+*.jsecoin.com
+*.webminepool.com
+
+
+# TEST DOMAINS (For demonstration)
+# example.com
+# badsite.org
+# blocked-test.local
+# *.ads.example.com
+# *.tracking.example.net
