@@ -1,44 +1,67 @@
 # Proxy Server Test Suite
 
-This folder contains test scripts for verifying the proxy server functionality.
+Comprehensive test suite for verifying all proxy server functionality.
 
 ## Prerequisites
 
 - `curl` must be installed
-- `bash` shell (use WSL on Windows)
+- `bash` shell (use WSL or Git Bash on Windows)
+- `nc` (netcat) for malformed request tests
 - Proxy server running (default: `localhost:8080`)
 
 ## Test Scripts
 
 | Script | Description |
 |--------|-------------|
-| `test_concurrent.sh` | Parallel requests and load testing |
+| `run_all_tests.sh` | **Master runner** - executes all test suites |
+| `test_basic.sh` | Basic HTTP forwarding (GET, POST, headers, redirects) |
+| `test_blocking.sh` | Domain blocking and filtering tests |
 | `test_connect.sh` | HTTPS CONNECT tunneling tests |
+| `test_concurrent.sh` | Parallel requests and load testing |
+| `test_malformed.sh` | Malformed request error handling |
 
-## Usage
+## Quick Start
 
-### Start the proxy server first:
+### 1. Start the proxy server:
 ```bash
 cd /path/to/proxy-project
 python run.py --port 8080
 ```
 
-### Run individual test suites:
+### 2. Run all tests:
 ```bash
-# HTTPS/CONNECT tests
-bash test_connect.sh localhost 8080
+cd tests
+bash run_all_tests.sh localhost 8080
+```
 
-# Concurrent/load tests
-bash test_concurrent.sh localhost 8080 100
+### 3. Or run individual test suites:
+```bash
+bash test_basic.sh localhost 8080
+bash test_blocking.sh localhost 8080
+bash test_connect.sh localhost 8080
+bash test_concurrent.sh localhost 8080 500
+bash test_malformed.sh localhost 8080
 ```
 
 ## Test Categories
 
-### 1. Concurrent Tests (`test_concurrent.sh`)
-- Parallel curl requests (default: 500)
-- Sequential vs parallel comparison
+### 1. Basic HTTP Tests (`test_basic.sh`)
+- Simple HTTP GET requests
+- HTTP POST with form data and JSON
+- Custom header forwarding
+- Query parameter handling
+- Redirect following
+- Large response handling
 
-### 2. CONNECT Tests (`test_connect.sh`)
+### 2. Domain Blocking Tests (`test_blocking.sh`)
+- Wildcard domain blocking (`*.doubleclick.net`)
+- Exact domain blocking (`bet365.com`)
+- Case-insensitive matching
+- HTTPS domain blocking
+- Subdomain wildcard verification
+- 403 response body verification
+
+### 3. CONNECT Tests (`test_connect.sh`)
 - Basic HTTPS through tunnel
 - TLS handshake verification
 - HTTPS POST requests
@@ -46,14 +69,41 @@ bash test_concurrent.sh localhost 8080 100
 - Blocked HTTPS domains
 - Tunnel establishment check
 
+### 4. Concurrent Tests (`test_concurrent.sh`)
+- Parallel curl requests (configurable, default: 500)
+- Sequential vs parallel comparison
+- Requests per second calculation
+- Success rate tracking
+
+### 5. Malformed Request Tests (`test_malformed.sh`)
+- Empty requests
+- Invalid HTTP methods
+- Missing Host headers
+- Very long URIs
+- Binary garbage data
+- Incomplete requests
+- Timeout handling
+
 ## Expected Results
 
-- **CONNECT tests**: HTTPS works through tunnel
-- **Concurrent tests**: High success rate (>95%)
+| Test Suite | Pass Criteria |
+|------------|---------------|
+| Basic HTTP | All 10 tests pass |
+| Blocking | Blocked domains return 403 |
+| CONNECT | HTTPS works through tunnel |
+| Concurrent | >95% success rate |
+| Malformed | Server handles gracefully (400/408/close) |
 
 ## Troubleshooting
 
-1. **Connection refused**: Make sure proxy is running
-2. **Timeout errors**: Increase `--max-time` in curl
-3. **Blocking not working**: Check `blocked_domains.txt`
-4. **HTTPS failures**: Verify CONNECT handler is working
+| Issue | Solution |
+|-------|----------|
+| Connection refused | Make sure proxy is running: `python run.py` |
+| Timeout errors | Increase `--max-time` in curl commands |
+| Blocking not working | Verify `config/blocked_domains.txt` entries |
+| HTTPS failures | Check CONNECT handler in `forwarder.py` |
+| nc not found | Install netcat: `apt install netcat` (Linux) |
+
+## Sample Log Output
+
+See `../docs/SAMPLE_LOGS.md` for example log entries produced during tests.

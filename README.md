@@ -23,7 +23,7 @@ A forward HTTP/HTTPS proxy server built with Python's asyncio. It handles reques
 5. Blindly pipes bytes between client and server (encrypted TLS traffic)
 6. No caching possible here since the proxy can't read the encrypted data
 
-![Proxy Flow](docs/images/proxy_flow.png)
+![Proxy Flow](docs/images/proxy_flow.jpg)
 
 ## Architecture
 

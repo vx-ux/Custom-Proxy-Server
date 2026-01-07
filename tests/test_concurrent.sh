@@ -70,7 +70,7 @@ else
 fi
 
 
-print_header "Test 2: Sequential Baseline (500 requests)"
+print_header "Test 2: Sequential Baseline (100 requests)"
 START_TIME=$(date +%s.%N)
 
 for i in $(seq 1 100); do
