@@ -8,7 +8,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Get project root directory (two levels up from this file)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 DEFAULT_CONFIG = PROJECT_ROOT / "config" / "blocked_domains.txt"
 
@@ -48,7 +47,32 @@ class DomainFilter:
     def _canonicalize(self, hostname):
         if hostname is None:
             return ""
-        return hostname.strip().lower() #simple
+        entry = hostname.strip().lower()
+        
+        if not entry:
+            return ""
+        sanitized = ''.join(c for c in entry if c.isprintable() and ord(c) < 128)
+
+        if sanitized != entry:
+            logger.warning(f"Rejected config entry with invalid characters: {repr(hostname)[:50]}")
+            return ""
+
+        MAX_HOSTNAME_LENGTH = 253
+        if len(sanitized) > MAX_HOSTNAME_LENGTH:
+            logger.warning(f"Rejected config entry exceeding max length: {sanitized[:50]}...")
+            return ""
+
+        check_part = sanitized[2:] if sanitized.startswith('*.') else sanitized
+
+        import re
+        if not re.match(r'^[a-z0-9]([a-z0-9\-\.]*[a-z0-9])?$|^[a-z0-9]$', check_part):
+            parts = check_part.split('.')
+            is_ip = len(parts) == 4 and all(p.isdigit() and 0 <= int(p) <= 255 for p in parts)
+            if not is_ip:
+                logger.warning(f"Rejected config entry with invalid hostname format: {sanitized[:50]}")
+                return ""
+        
+        return sanitized
 
     def is_blocked(self, host):
         if not host:

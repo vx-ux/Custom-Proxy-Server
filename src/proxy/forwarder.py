@@ -35,21 +35,22 @@ async def relay_and_capture(reader, writer):
 
 
 async def pipe(reader, writer):
-    while True:
-        try:
-            data = await reader.read(4096)
-            if not data:
+    try:
+        while True:
+            try:
+                data = await asyncio.wait_for(reader.read(4096), timeout=5.0)
+                if not data:
+                    break
+                
+                writer.write(data)
+                await writer.drain()
+# error handling dhyan se karna hai
+            except asyncio.TimeoutError:
+                continue
+            except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
                 break
-            
-            writer.write(data)
-            await writer.drain()
-
-        except (ConnectionResetError, BrokenPipeError):
-            pass
-        except asyncio.CancelledError:
-            pass
-        except Exception:
-            pass
+    except asyncio.CancelledError:
+        raise
         
 # CONNECT is just a http request like GET 
 # basically we create a passage/tunnel b/w the client and the server for https request forwarding as https is obv protected

@@ -3,7 +3,7 @@ import threading
 import time
 from collections import defaultdict
 from logging.handlers import RotatingFileHandler
-
+from termcolor import colored
 
 class ProxyLogger:
     # 5 mb liya
@@ -53,7 +53,7 @@ class ProxyLogger:
 class ProxyMetrics:
     
     def __init__(self):
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         self._total_requests = 0
         self._blocked_requests = 0
         self._host_counts = defaultdict(int)
@@ -105,18 +105,16 @@ class ProxyMetrics:
     def print_summary(self):
         summary = self.get_summary()
         
-        print("\n" + "=" * 50)
-        print("PROXY METRICS SUMMARY")
-        print("=" * 50)
-        print(f"Uptime: {summary['uptime_seconds']} seconds")
-        print(f"Total Requests: {summary['total_requests']}")
-        print(f"  - Allowed: {summary['allowed_requests']}")
-        print(f"  - Blocked: {summary['blocked_requests']}")
-        print(f"Requests/Minute: {summary['requests_per_minute']}")
-        print("\nTop Requested Hosts:")
+        print(colored("Proxy Metrics Summary\n", "red"))
+        print(colored(f"Uptime: {summary['uptime_seconds']} seconds", "green", attrs=["bold"]))
+        print(colored(f"Total Requests: {summary['total_requests']}", "green", attrs=["bold"]))
+        print(colored(f"  - Allowed: {summary['allowed_requests']}", "green", attrs=["bold"]))
+        print(colored(f"  - Blocked: {summary['blocked_requests']}", "red", attrs=["bold"]))
+        print(colored(f"Requests/Minute: {summary['requests_per_minute']}", "green", attrs=["bold"]))
+        print(colored("\nTop Requested Hosts:", "blue", attrs=["bold"]))
         for host, count in summary['top_hosts']:
-            print(f"  {host}: {count} requests")
-        print("=" * 50 + "\n")
+            print(colored(f"  {host}: {count} requests", "green", attrs=["bold"]))
+        print("\n")
 
 
 # Global instances
