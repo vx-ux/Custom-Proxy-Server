@@ -8,30 +8,30 @@ This document describes the architecture, design decisions, and implementation d
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              CLIENT APPLICATION                              │
-│                    (Browser, curl, wget, applications)                       │
+│                              CLIENT APPLICATION                             │
+│                    (Browser, curl, wget, applications)                      │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
                                       │ HTTP/HTTPS Request
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              PROXY SERVER                                    │
+│                              PROXY SERVER                                   │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                         proxy.py (Entry Point)                         │  │
-│  │              • asyncio.start_server() event loop                       │  │
-│  │              • Signal handling (SIGINT, SIGTERM)                       │  │
-│  │              • Graceful shutdown with active task tracking             │  │
+│  │                         proxy.py (Entry Point)                         │ │
+│  │              • asyncio.start_server() event loop                       │ │
+│  │              • Signal handling (SIGINT, SIGTERM)                       │ │
+│  │              • Graceful shutdown with active task tracking             │ │
 │  └───────────────────────────────────────────────────────────────────────┘  │
-│                                      │                                       │
-│                                      ▼                                       │
+│                                      │                                      │
+│                                      ▼                                      │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                    forwarder.py (Request Router)                       │  │
-│  │              • handle_client() - Main entry per connection             │  │
-│  │              • handle_http() - HTTP GET/POST forwarding                │  │
-│  │              • handle_connect() - HTTPS tunnel establishment           │  │
+│  │                    forwarder.py (Request Router)                       │ │
+│  │              • handle_client() - Main entry per connection             │ │
+│  │              • handle_http() - HTTP GET/POST forwarding                │ │
+│  │              • handle_connect() - HTTPS tunnel establishment           │ │
 │  └───────────────────────────────────────────────────────────────────────┘  │
-│          │              │              │              │                      │
-│          ▼              ▼              ▼              ▼                      │
+│          │              │              │              │                     │
+│          ▼              ▼              ▼              ▼                     │
 │  ┌────────────┐ ┌─────────────┐ ┌───────────┐ ┌──────────────┐              │
 │  │http_parser │ │domain_filter│ │ http_cache│ │ proxy_logger │              │
 │  │            │ │             │ │   (LRU)   │ │  (rotating)  │              │
@@ -44,7 +44,7 @@ This document describes the architecture, design decisions, and implementation d
                                       │ Forwarded Request
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            ORIGIN SERVER                                     │
+│                            ORIGIN SERVER                                    │
 │                    (httpbin.org, google.com, etc.)                          │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -115,19 +115,19 @@ This document describes the architecture, design decisions, and implementation d
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Event Loop (Single Thread)                  │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │Client 1 │ │Client 2 │ │Client 3 │ │Client 4 │ │Client N │   │
-│  │  Task   │ │  Task   │ │  Task   │ │  Task   │ │  Task   │   │
-│  └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘   │
+│                      Event Loop (Single Thread)                 │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐    │
+│  │Client 1 │ │Client 2 │ │Client 3 │ │Client 4 │ │Client N │    │
+│  │  Task   │ │  Task   │ │  Task   │ │  Task   │ │  Task   │    │
+│  └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘    │
 │       │           │           │           │           │         │
 │       └───────────┴───────────┴─────┬─────┴───────────┘         │
-│                                     │                            │
-│                            ┌────────▼────────┐                   │
-│                            │  Cooperative    │                   │
-│                            │  Scheduling     │                   │
-│                            │  (await points) │                   │
-│                            └─────────────────┘                   │
+│                                     │                           │
+│                            ┌────────▼────────┐                  │
+│                            │  Cooperative    │                  │
+│                            │  Scheduling     │                  │
+│                            │  (await points) │                  │
+│                            └─────────────────┘                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
