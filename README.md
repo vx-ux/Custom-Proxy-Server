@@ -41,7 +41,7 @@ A forward HTTP/HTTPS proxy server built with Python's asyncio. It handles reques
          │              │              │              │
          ▼              ▼              ▼              ▼
    ┌──────────┐  ┌─────────────┐  ┌──────────┐  ┌───────────┐
-   │http_parser│  │domain_filter│  │http_cache│  │proxy_logger│
+   │http_parser│ │domain_filter│  │http_cache│  │proxy_logger│
    │          │  │             │  │  (LRU)   │  │ (rotating) │
    └──────────┘  └─────────────┘  └──────────┘  └───────────┘
 ```
@@ -146,15 +146,7 @@ proxy-project/
 - **No HTTPS interception** — The proxy can't inspect HTTPS traffic. It just tunnels encrypted bytes.
 - **No authentication** — Anyone who can reach the proxy can use it.
 - **Basic cache validation** — Doesn't handle ETags or conditional requests properly.
-- **Single-host binding** — Binds to one interface at a time.
 
-## Future Improvements
-
-- [ ] Proxy authentication (Basic/Digest)
-- [ ] Connection pooling to origin servers
-- [ ] Proper HTTP/1.1 keep-alive support
-- [ ] Metrics endpoint (Prometheus format)
-- [ ] Config file for cache/timeout settings
 
 ## License
 
@@ -162,4 +154,3 @@ MIT
 
 ---
 
-Built while learning how the internet actually works.
