@@ -72,7 +72,7 @@ pip install -e .
 proxy-server
 ```
 
-Requires Python 3.8+. No external dependencies.
+Requires Python 3.8+. Requires `termcolor` package (`pip install termcolor`) for colored outputs.
 
 ## Usage
 
@@ -132,6 +132,7 @@ Only GET requests with cacheable responses are stored. Requests with `Authorizat
 ```
 proxy-project/
 ├── src/proxy/
+│   ├── __init__.py       # Package initializer
 │   ├── proxy.py          # Server entry point
 │   ├── forwarder.py      # Request handling
 │   ├── http_parser.py    # HTTP parsing
@@ -141,8 +142,19 @@ proxy-project/
 ├── config/
 │   └── blocked_domains.txt
 ├── docs/
-├── run.py
-└── setup.py
+│   ├── DESIGN.md         # Architecture documentation
+│   ├── SAMPLE_LOGS.md    # Example log output
+│   └── images/           # Diagrams
+├── tests/
+│   ├── README.md         # Test documentation
+│   ├── test_basic.sh     # HTTP forwarding tests
+│   ├── test_blocking.sh  # Domain filtering tests
+│   ├── test_concurrent.sh # Load tests
+│   ├── test_connect.sh   # HTTPS tunneling tests
+│   └── test_malformed.sh # Error handling tests
+├── run.py                # Direct execution
+├── setup.py              # Package installation
+└── .gitignore
 ```
 
 ## Limitations
