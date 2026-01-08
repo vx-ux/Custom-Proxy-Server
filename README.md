@@ -2,7 +2,9 @@
 
 A forward HTTP/HTTPS proxy server built with Python's asyncio. It handles request forwarding, CONNECT tunneling for HTTPS, domain-based filtering, and basic response caching.
 
-## How It Works
+## Video Demonstration
+
+Basic Proxy server demonstration: [https://youtu.be/5s3Tnp_vMlk](https://youtu.be/5s3Tnp_vMlk)
 
 ### HTTP Requests
 
