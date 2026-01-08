@@ -164,9 +164,6 @@ proxy-project/
 - **Basic cache validation** — Doesn't handle ETags or conditional requests properly.
 
 
-## License
-
-MIT
 
 ---
 
