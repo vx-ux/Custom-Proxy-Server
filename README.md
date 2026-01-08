@@ -6,6 +6,8 @@ A forward HTTP/HTTPS proxy server built with Python's asyncio. It handles reques
 
 Basic Proxy server demonstration: [https://youtu.be/5s3Tnp_vMlk](https://youtu.be/5s3Tnp_vMlk)
 
+## How It Works
+
 ### HTTP Requests
 
 1. Client connects and sends a request like `GET http://example.com/path HTTP/1.1`
